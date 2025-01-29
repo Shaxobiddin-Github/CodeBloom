@@ -95,7 +95,7 @@ class Video(models.Model):
 # ----------------------------------------------------------------O'quvchi------------------------------------------
 
 class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
+    fio = models.CharField(max_length=200)
     profile_picture = models.ImageField(upload_to='students/', null=True, blank=True)
     bio = models.TextField(null=True, blank=True)  # Qisqacha ma'lumot
     enrolled_courses = models.ManyToManyField(Course, through='Enrollment', related_name='students')
@@ -118,8 +118,7 @@ class Student(models.Model):
         return self.comments.count()
     
     def __str__(self):
-        return self.user.get_full_name() or self.user.username
-
+        return self.fio
 
 class Enrollment(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrollments')
@@ -129,7 +128,8 @@ class Enrollment(models.Model):
     enrolled_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student.user.username} - {self.course.title}"
+        return f"{self.student.fio} - {self.course.title}"
+
     
 
 
@@ -142,7 +142,7 @@ class Like(models.Model):
         unique_together = ('student', 'video')  # Bir o‘quvchi bir videoga faqat bir marta layk bosishi mumkin
 
     def __str__(self):
-        return f"{self.student.user.username} liked {self.video.title}"
+        return f"{self.student.fio} liked {self.video.title}"
 
 
 class SavedVideo(models.Model):
@@ -154,7 +154,7 @@ class SavedVideo(models.Model):
         unique_together = ('student', 'video')  # Bir o‘quvchi bir videoni faqat bir marta saqlashi mumkin
 
     def __str__(self):
-        return f"{self.student.user.username} saved {self.video.title}"
+        return f"{self.student.fio} saved {self.video.title}"
 
 
 class Comment(models.Model):
@@ -164,7 +164,14 @@ class Comment(models.Model):
     commented_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.student.user.username} commented on {self.video.title}"
+        return f"{self.student.fio} commented on {self.video.title}"
     
     # -------------------------------------------------------END O'quvchi----------------------------------------
 
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Userga bog'lanish
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)  # Rasm maydoni
+
+    def __str__(self):
+        return self.user.username

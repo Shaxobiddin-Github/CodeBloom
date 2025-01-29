@@ -35,13 +35,26 @@
       </div>
 
       <div class="profile">
+         {% if request.user.is_authenticated %}
          <img src="{% static 'images/pic-1.jpg' %}" class="image" alt="">
-         <h3 class="name">shaikh anas</h3>
-         <p class="role">studen</p>
-         <a href="{% url 'profile' %}" class="btn">view profile</a>
+         {%  if is_teacher %}
+               <h3 class="name">{{ request.user.username }}</h3>
+               <p class="role">Teacher</p>
+            {% else %}
+               <h3 class="name">{{ request.user.username }}</h3>
+               <p class="role">Student</p>
+            {% endif %}
+         {% else %}
+            <h2 style="color: brown;">Iltimos, tizimga kiring.</h2>
+         {% endif %}
+         {% if is_teacher %}
+         <a href="{% url 'teacher_profile' %}" class="btn">view profile</a>
+         {% else %}
+         <a href="{% url 'profile' %}" class="btn" >view profile</a>
+         {% endif %}
          <div class="flex-btn">
-            <a href="login.html" class="option-btn">login</a>
-            <a href="register.html" class="option-btn">register</a>
+            <a href="{% url 'login' %}" class="option-btn">login</a>
+            <a href="{% url 'register' %}" class="option-btn">register</a>
          </div>
       </div>
 
@@ -56,10 +69,23 @@
    </div>
 
    <div class="profile">
+      {% if request.user.is_authenticated %}
       <img src="{% static 'images/pic-1.jpg' %}" class="image" alt="">
-      <h3 class="name">shaikh anas</h3>
-      <p class="role">studen</p>
-      <a href="{% url 'profile' %}" class="btn">view profile</a>
+         {%if is_teacher %}
+         <h3 class="name">{{ request.user.username }}</h3>
+         <p class="role">Teacher</p>
+         {% else %}
+         <h3 class="name">{{ request.user.username }}</h3>
+         <p class="role">Student</p>
+         {% endif %}
+      {% else %}
+      <h2 style="color: brown;">Iltimos, tizimga kiring.</h2>
+      {% endif %}
+      {% if is_teacher %}
+      <a href="{% url 'teacher_profile' %}" class="btn">view profile</a>
+      {% else %}
+      <a href="{% url 'profile' %}" class="btn" >view profile</a>
+      {% endif %}
    </div>
 
    <nav class="navbar">
